@@ -1,8 +1,9 @@
 package io.github.amrojjeh;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
@@ -12,10 +13,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.entities.ChannelType;
 
-/**
- * Hello world!
- *
- */
 public class Listener extends ListenerAdapter
 {
     public static void main( String[] args ) throws LoginException
@@ -33,21 +30,13 @@ public class Listener extends ListenerAdapter
 
     public static String loadToken()
     {
-        File file = new File("token.txt");
-        Scanner scanner;
         try {
-            scanner = new Scanner(file);
-        } catch (FileNotFoundException e) {
+            List<String> lines = Files.readAllLines(Paths.get("token.txt"));
+            if (lines.size() == 0) return null;
+            return lines.get(0);
+        } catch (IOException e) {
             return null;
         }
-        if (!scanner.hasNextLine())
-        {
-            scanner.close();
-            return null;
-        }
-        String token = scanner.nextLine();
-        scanner.close();
-        return token;
     }
 
     @Override
